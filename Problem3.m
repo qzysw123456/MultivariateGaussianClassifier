@@ -1,7 +1,8 @@
-load('data.mat'); %contain raw .txt data 
 
-Train = table2array(trainingdata);
-Test = table2array(testdata);
+function Problem3(training_data,test_data)
+
+Train = load(training_data);
+Test = load(test_data);
 
 [n,m] = size(Train);
 tag = Train(:,m);
@@ -15,8 +16,8 @@ mu1 = mean(X1)
 mu2 = mean(X2)
 
 %independent Si
-S1 = cov(X1);
-S2 = cov(X2);
+S1 = cov(X1)
+S2 = cov(X2)
 err_independent = 0;
 for i = 1 : length(Test)
     x = Test(i,1:m-1);
@@ -29,9 +30,10 @@ for i = 1 : length(Test)
         err_independent = err_independent +1;
     end    
 end
+err_independent
 
 %share Si, S1 = S2;
-S = cov([X1;X2]);
+S = cov([X1;X2])
 err_share = 0;
 for i = 1 : length(Test)
     x = Test(i,1:m-1);
@@ -44,15 +46,16 @@ for i = 1 : length(Test)
         err_share = err_share +1;
     end
 end
+err_share
 
 %S1 and S2 are diagnal
-S1_dia = diag(diag(cov(X1)));
-S2_dia = diag(diag(cov(X2)));
+S1_diagonal = diag(diag(cov(X1)))
+S2_diagonal = diag(diag(cov(X2)))
 err_diagnal = 0;
 for i = 1 : length(Test)
     x = Test(i,1:m-1);
-    g1 = -1/2*log(det(S1_dia))-1/2*(x-mu1)*S1_dia^-1*(x-mu1)'+log(C1);
-    g2 = -1/2*log(det(S2_dia))-1/2*(x-mu2)*S2_dia^-1*(x-mu2)'+log(C2);
+    g1 = -1/2*log(det(S1_diagonal))-1/2*(x-mu1)*S1_diagonal^-1*(x-mu1)'+log(C1);
+    g2 = -1/2*log(det(S2_diagonal))-1/2*(x-mu2)*S2_diagonal^-1*(x-mu2)'+log(C2);
     if g1 - g2 >0 && Test(i,m)==2
         err_diagnal = err_diagnal +1;
     end
@@ -60,7 +63,7 @@ for i = 1 : length(Test)
         err_diagnal = err_diagnal +1;
     end    
 end
-
+err_diagnal
 %S1 and S2 are diagnal, S1 = alpha1 I, S2 = alpha2 I
 err_dia2 = 0;
 S1_dia2 = sum(diag(cov(X1)))/(m-1) * eye(m-1);
@@ -79,3 +82,6 @@ for i = 1 : length(Test)
         err_dia2 = err_dia2 +1;
     end
 end
+err_dia2
+end
+
